@@ -6145,6 +6145,10 @@ extern "C" void jl_init_codegen(void)
         active_module = new Module("julia", jl_LLVMContext);
         jl_setup_module(active_module);
         engine_module = m;
+#ifdef USE_ORCJIT
+        engine_module = new Module("engine_module", jl_LLVMContext);
+        jl_setup_module(engine_module);
+#endif
     }
 #else
     engine_module = m = jl_Module = new Module("julia", jl_LLVMContext);
@@ -6233,6 +6237,7 @@ extern "C" void jl_init_codegen(void)
 
 #if defined(LLVM38)
     engine_module->setDataLayout(jl_TargetMachine->createDataLayout());
+    active_module->setDataLayout(jl_TargetMachine->createDataLayout());
 #elif defined(LLVM36) && !defined(LLVM37)
     engine_module->setDataLayout(jl_TargetMachine->getSubtargetImpl()->getDataLayout());
 #elif defined(LLVM35) && !defined(LLVM37)
