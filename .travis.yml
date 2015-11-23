@@ -2,6 +2,7 @@ language: cpp
 os:
     - linux
     - osx
+group: edge
 env:
     - ARCH="i686"
     - ARCH="x86_64"
